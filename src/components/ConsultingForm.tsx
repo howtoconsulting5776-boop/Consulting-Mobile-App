@@ -31,8 +31,9 @@ interface IConsultingFormProps {
   formData: IConsultingFormData;
   errors: IConsultingFormErrors;
   isSubmitted: boolean;
+  submitError?: string;
   onFieldChange: (field: keyof IConsultingFormData, value: string) => void;
-  onSubmit: () => boolean;
+  onSubmit: () => Promise<boolean>;
   onComplete: () => void;
   onBack: () => void;
   onMenuClick: () => void;
@@ -45,6 +46,7 @@ export default function ConsultingForm({
   formData,
   errors,
   isSubmitted,
+  submitError,
   onFieldChange,
   onSubmit,
   onComplete,
@@ -76,7 +78,7 @@ export default function ConsultingForm({
 
   const handleRequestSubmit = async () => {
     if (isSendingEmail) return;
-    const isValid = onSubmit();
+    const isValid = await onSubmit();
     if (!isValid) return;
 
     const emailResult = await handleSendConfirmationEmail();
@@ -215,6 +217,12 @@ export default function ConsultingForm({
         {emailError && (
           <div className="bg-[#ef4444]/10 border border-[#ef4444]/30 rounded-xl p-4 text-[#b91c1c] text-[12px] font-medium">
             {emailError}
+          </div>
+        )}
+
+        {submitError && (
+          <div className="bg-[#ef4444]/10 border border-[#ef4444]/30 rounded-xl p-4 text-[#b91c1c] text-[12px] font-medium">
+            {submitError}
           </div>
         )}
       </div>

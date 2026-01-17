@@ -3,7 +3,7 @@ import { ArrowLeft, ClipboardList, Eye } from 'lucide-react';
 import { Button } from './ui/button';
 
 interface IConsultingRequest {
-  id: number;
+  id: string;
   serviceName: string;
   applicantName: string;
   academyName: string;
@@ -15,7 +15,9 @@ interface IConsultingRequest {
 
 interface IAdminDashboardProps {
   requests: IConsultingRequest[];
-  onStatusChange: (id: number, status: '대기' | '상담완료') => void;
+  onStatusChange: (id: string, status: '대기' | '상담완료') => void;
+  isLoading?: boolean;
+  errorMessage?: string;
   onBack: () => void;
   onMenuClick: () => void;
 }
@@ -23,12 +25,14 @@ interface IAdminDashboardProps {
 export default function AdminDashboard({
   requests,
   onStatusChange,
+  isLoading = false,
+  errorMessage,
   onBack,
   onMenuClick
 }: IAdminDashboardProps) {
-  const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  const handleToggleDetail = (id: number) => {
+  const handleToggleDetail = (id: string) => {
     setExpandedId(prev => (prev === id ? null : id));
   };
 
@@ -81,7 +85,15 @@ export default function AdminDashboard({
           </div>
         </div>
 
-        {requests.length === 0 ? (
+        {isLoading ? (
+          <div className="bg-white rounded-2xl p-6 text-center text-[#64748b] text-[12px] font-light shadow-[0_2px_8px_rgba(5,17,40,0.04)]">
+            상담 요청을 불러오는 중입니다...
+          </div>
+        ) : errorMessage ? (
+          <div className="bg-white rounded-2xl p-6 text-center text-[#ef4444] text-[12px] font-light shadow-[0_2px_8px_rgba(5,17,40,0.04)]">
+            {errorMessage}
+          </div>
+        ) : requests.length === 0 ? (
           <div className="bg-white rounded-2xl p-6 text-center text-[#64748b] text-[12px] font-light shadow-[0_2px_8px_rgba(5,17,40,0.04)]">
             아직 접수된 상담 신청이 없습니다.
           </div>

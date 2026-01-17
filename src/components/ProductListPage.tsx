@@ -17,6 +17,8 @@ interface Product {
 
 interface ProductListPageProps {
   products: Product[];
+  isLoading?: boolean;
+  errorMessage?: string;
   favorites: Set<number>;
   searchTerm: string;
   sortOption: string;
@@ -123,6 +125,8 @@ const aiAutomationSolutions = [
 
 export default function ProductListPage({
   products,
+  isLoading = false,
+  errorMessage,
   onProductClick,
   onMenuClick,
   cartCount,
@@ -259,83 +263,106 @@ export default function ProductListPage({
         </div>
 
         {/* Professional Service Cards */}
-        <div className="space-y-4">
-          {products.map((product) => {
-            const category = getCategoryInfo(product.dietary);
-            
-            return (
+        {isLoading ? (
+          <div className="space-y-4">
+            {[0, 1, 2].map((index) => (
               <div
-                key={product.id}
-                onClick={() => onProductClick(product)}
-                className="bg-white rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(5,17,40,0.04)] hover:shadow-[0_4px_16px_rgba(5,17,40,0.08)] transition-all cursor-pointer"
+                key={`skeleton-${index}`}
+                className="bg-white rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(5,17,40,0.04)] animate-pulse"
               >
-                {/* Image with Overlay */}
-                <div className="relative h-[180px] overflow-hidden">
-                  <img
-                    src={product.images[0]}
-                    alt={product.name}
-                    className="w-full h-full object-cover"
-                    style={{ filter: 'saturate(0.85) brightness(0.95)' }}
-                  />
-                  
-                  {/* Subtle Category Badge */}
-                  <div className="absolute top-4 left-4">
-                    <div className={`inline-flex items-center gap-1.5 ${category.bgColor} backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20`}>
-                      <span className={`text-[10px] font-medium tracking-wide uppercase ${category.color}`}>
-                        {category.name}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Content with Ample White Space */}
-                <div className="p-5">
-                  {/* Title */}
-                  <h3 className="text-[#051128] text-[16px] font-bold tracking-tight mb-2 leading-tight">
-                    {product.name}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-[#64748b] text-[12px] font-light leading-relaxed mb-4">
-                    {product.description}
-                  </p>
-
-                  {/* Provider with Thin Line Icon */}
-                  <div className="flex items-center gap-2 mb-4 pb-4 border-b border-[#e2e8f0]">
-                    <Briefcase className="w-3.5 h-3.5 text-[#64748b]" strokeWidth="1.5" />
-                    <span className="text-[#64748b] text-[11px] font-light">
-                      {product.farm}
-                    </span>
-                  </div>
-
-                  {/* Price and CTA */}
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-[#64748b] text-[10px] font-light uppercase tracking-wide mb-0.5">컨설팅 비용</p>
-                      <p className="text-[#051128] text-[16px] font-bold">
-                        {product.price}
-                      </p>
-                    </div>
-                    
-                    {/* Sophisticated Text Link Button */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onProductClick(product);
-                      }}
-                      className="text-[#d4af37] text-[12px] font-medium tracking-wide hover:text-[#b8941f] transition-colors flex items-center gap-1.5"
-                    >
-                      상세보기
-                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                      </svg>
-                    </button>
-                  </div>
+                <div className="h-[180px] bg-slate-200"></div>
+                <div className="p-5 space-y-3">
+                  <div className="h-4 bg-slate-200 rounded w-2/3"></div>
+                  <div className="h-3 bg-slate-200 rounded w-full"></div>
+                  <div className="h-3 bg-slate-200 rounded w-5/6"></div>
+                  <div className="h-10 bg-slate-200 rounded w-full"></div>
                 </div>
               </div>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        ) : errorMessage ? (
+          <div className="bg-white rounded-2xl p-4 text-center text-[#ef4444] text-[12px] font-light shadow-[0_2px_8px_rgba(5,17,40,0.04)]">
+            {errorMessage}
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {products.map((product) => {
+              const category = getCategoryInfo(product.dietary);
+
+              return (
+                <div
+                  key={product.id}
+                  onClick={() => onProductClick(product)}
+                  className="bg-white rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(5,17,40,0.04)] hover:shadow-[0_4px_16px_rgba(5,17,40,0.08)] transition-all cursor-pointer"
+                >
+                  {/* Image with Overlay */}
+                  <div className="relative h-[180px] overflow-hidden">
+                    <img
+                      src={product.images[0]}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                      style={{ filter: 'saturate(0.85) brightness(0.95)' }}
+                    />
+
+                    {/* Subtle Category Badge */}
+                    <div className="absolute top-4 left-4">
+                      <div className={`inline-flex items-center gap-1.5 ${category.bgColor} backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20`}>
+                        <span className={`text-[10px] font-medium tracking-wide uppercase ${category.color}`}>
+                          {category.name}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Content with Ample White Space */}
+                  <div className="p-5">
+                    {/* Title */}
+                    <h3 className="text-[#051128] text-[16px] font-bold tracking-tight mb-2 leading-tight">
+                      {product.name}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-[#64748b] text-[12px] font-light leading-relaxed mb-4">
+                      {product.description}
+                    </p>
+
+                    {/* Provider with Thin Line Icon */}
+                    <div className="flex items-center gap-2 mb-4 pb-4 border-b border-[#e2e8f0]">
+                      <Briefcase className="w-3.5 h-3.5 text-[#64748b]" strokeWidth="1.5" />
+                      <span className="text-[#64748b] text-[11px] font-light">
+                        {product.farm}
+                      </span>
+                    </div>
+
+                    {/* Price and CTA */}
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-[#64748b] text-[10px] font-light uppercase tracking-wide mb-0.5">컨설팅 비용</p>
+                        <p className="text-[#051128] text-[16px] font-bold">
+                          {product.price}
+                        </p>
+                      </div>
+
+                      {/* Sophisticated Text Link Button */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onProductClick(product);
+                        }}
+                        className="text-[#d4af37] text-[12px] font-medium tracking-wide hover:text-[#b8941f] transition-colors flex items-center gap-1.5"
+                      >
+                        상세보기
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* AI Automation Solutions Section */}
         <div className="mt-12 mb-8">
