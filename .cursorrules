@@ -1,0 +1,42 @@
+커서룰 (Cursor Rules)
+React 18 + TypeScript + Vite 프로젝트 가이드
+
+프로젝트 개요
+- React 18 + TypeScript + Vite 기반
+- iPhone 16 (393x852px) 모바일 뷰포트 최적화
+- SPA 구조의 컨설팅 마켓플레이스 UI
+
+아키텍처
+- `App.tsx`에서 중앙 상태 관리
+- 컴포넌트 계층: 페이지 + 공통 UI 컴포넌트
+- Props drilling으로 데이터 전달
+- `ViewMode` enum으로 화면 전환
+
+네이밍 규칙
+- 컴포넌트: PascalCase
+- 변수/함수: camelCase (동사+명사)
+- 인터페이스: `I` + `Props` (예: `IUserCardProps`)
+- 타입: 명확한 의미의 이름 사용
+
+보안
+- 클라이언트 측 구현만 (인증/결제 없음)
+- 로컬 상태로만 데이터 관리
+- 외부 이미지: HTTPS CDN 사용(Unsplash 등)
+
+디렉토리 구조
+- `App.tsx`: 전역 상태 + 화면 전환
+- `components/`: 페이지 및 UI 컴포넌트
+- `components/ui/`: Radix UI 기반 컴포넌트
+- `imports/`: SVG 및 Figma export 파일
+- `styles/`: Tailwind CSS 설정
+- `assets/`: 이미지 리소스
+
+금지 사항
+- DOM 직접 조작(`document.getElementById`)
+- 컴포넌트 내부에서 `localStorage` 접근
+- 컴포넌트에서 `fetch` 호출
+- 인라인 스타일 사용 (Tailwind 권장)
+
+실행/테스트
+- 의존성 설치: `npm i`
+- 개발 서버 실행: `npm run dev`
