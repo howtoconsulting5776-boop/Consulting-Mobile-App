@@ -284,6 +284,10 @@ export default function ProductListPage({
           <div className="bg-white rounded-2xl p-4 text-center text-[#ef4444] text-[12px] font-light shadow-[0_2px_8px_rgba(5,17,40,0.04)]">
             {errorMessage}
           </div>
+        ) : products.length === 0 ? (
+          <div className="bg-white rounded-2xl p-6 text-center text-[#64748b] text-[12px] font-light shadow-[0_2px_8px_rgba(5,17,40,0.04)]">
+            아직 등록된 컨설팅 서비스가 없습니다.
+          </div>
         ) : (
           <div className="space-y-4">
             {products.map((product) => {
